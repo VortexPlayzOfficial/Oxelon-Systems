@@ -1,123 +1,171 @@
-import axios from "axios";
+const axios = require("axios");
 
-export default async function handler(req, res) {
+function getCookie(req, name) {
+    const cookies = req.headers.cookie || "";
+
+    const match = cookies
+        .split(";")
+        .map(cookie => cookie.trim())
+        .find(cookie => cookie.startsWith(`${name}=`));
+
+    if (!match) {
+        return null;
+    }
+
+    return decodeURIComponent(
+        match.substring(name.length + 1)
+    );
+}
+
+module.exports = async (req, res) => {
+    if (req.method !== "GET") {
+        return res.status(405).json({
+            error: "Method not allowed"
+        });
+    }
+
+    const {
+        code,
+        state,
+        error
+    } = req.query;
+
+    if (error) {
+        return res.status(400).json({
+            error: "Discord OAuth was cancelled",
+            details: error
+        });
+    }
+
+    if (!code) {
+        return res.status(400).json({
+            error: "Missing Discord OAuth code"
+        });
+    }
+
+    const savedState =
+        getCookie(req, "oauth_state");
+
+    if (!state || !savedState || state !== savedState) {
+        return res.status(400).json({
+            error: "Invalid OAuth state"
+        });
+    }
+
+    const clientId =
+        process.env.DISCORD_CLIENT_ID;
+
+    const clientSecret =
+        process.env.DISCORD_CLIENT_SECRET;
+
+    const redirectUri =
+        process.env.DISCORD_REDIRECT_URI;
+
+    if (
+        !clientId ||
+        !clientSecret ||
+        !redirectUri
+    ) {
+        return res.status(500).json({
+            error: "Discord OAuth environment variables are missing"
+        });
+    }
+
     try {
-        const { code } = req.query;
-
-        if (!code) {
-            return res.status(400).json({
-                error: "Missing Discord OAuth code"
-            });
-        }
-
-        const clientId =
-            process.env.DISCORD_CLIENT_ID;
-
-        const clientSecret =
-            process.env.DISCORD_CLIENT_SECRET;
-
-        const redirectUri =
-            "https://oxelon-website1.vercel.app/api/auth/callback";
-
-        if (!clientId || !clientSecret) {
-            return res.status(500).json({
-                error: "Discord OAuth environment variables are missing"
-            });
-        }
-
-        const tokenResponse = await axios.post(
-            "https://discord.com/api/v10/oauth2/token",
-            new URLSearchParams({
-                client_id: clientId,
-                client_secret: clientSecret,
-                grant_type: "authorization_code",
-                code: String(code),
-                redirect_uri: redirectUri
-            }).toString(),
-            {
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded"
+        const tokenResponse =
+            await axios.post(
+                "https://discord.com/api/v10/oauth2/token",
+                new URLSearchParams({
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    grant_type: "authorization_code",
+                    code: String(code),
+                    redirect_uri: redirectUri
+                }).toString(),
+                {
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    }
                 }
-            }
-        );
+            );
 
         const accessToken =
             tokenResponse.data.access_token;
 
         if (!accessToken) {
-            return res.status(500).json({
+            return res.status(400).json({
                 error: "Discord did not return an access token"
             });
         }
 
-        /*
-         * Get the Discord user.
-         */
-
-        const userResponse = await axios.get(
-            "https://discord.com/api/v10/users/@me",
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${accessToken}`
+        const userResponse =
+            await axios.get(
+                "https://discord.com/api/v10/users/@me",
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${accessToken}`
+                    }
                 }
-            }
-        );
+            );
+
+        const user =
+            userResponse.data;
 
         /*
-         * Get the user's Discord servers.
+         * Store the OAuth token in an HttpOnly cookie.
+         *
+         * The browser cannot read this cookie from
+         * JavaScript, but your API routes can use it.
          */
 
-        const guildResponse = await axios.get(
-            "https://discord.com/api/v10/users/@me/guilds",
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${accessToken}`
-                }
-            }
-        );
+        const session = Buffer
+            .from(
+                JSON.stringify({
+                    access_token: accessToken,
+                    user
+                })
+            )
+            .toString("base64url");
 
-        /*
-         * Store the OAuth information in a temporary
-         * cookie so the dashboard can request it.
-         */
+        const isProduction =
+            process.env.NODE_ENV === "production";
 
-        const session = Buffer.from(
-            JSON.stringify({
-                user: userResponse.data,
-                guilds: guildResponse.data,
-                accessToken
-            })
-        ).toString("base64url");
+        const cookies = [
+            `oauth_session=${session}`,
+            "Path=/",
+            "HttpOnly",
+            "SameSite=Lax",
+            "Max-Age=604800"
+        ];
+
+        if (isProduction) {
+            cookies.push("Secure");
+        }
 
         res.setHeader(
             "Set-Cookie",
-            `oxelon_session=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`
+            cookies.join("; ")
         );
-
-        /*
-         * Send the user back to the dashboard.
-         */
 
         return res.redirect(
             302,
             "/dashboard.html"
         );
 
-    } catch (error) {
+    } catch (err) {
 
         console.error(
             "Discord OAuth error:",
-            error.response?.data || error.message
+            err.response?.data || err.message
         );
 
         return res.status(500).json({
             error: "Discord OAuth failed",
             details:
-                error.response?.data ||
-                error.message
+                err.response?.data ||
+                err.message
         });
     }
-}
+};
