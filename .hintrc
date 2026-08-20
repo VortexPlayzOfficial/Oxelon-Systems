@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+<<<<<<< HEAD
+    "meta-viewport": "off",
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "backdrop-filter"
+        ]
+      }
+    ],
+    "no-inline-styles": "off"
+=======
+    "meta-viewport": "off"
+>>>>>>> 416526a58e32156e7d168737112f596388939e6c
+  }
+}
