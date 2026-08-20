@@ -1,1863 +1,1771 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dashboard — Oxelon</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: #050506;
-            color: #f5f5f5;
-            font-family: Inter, -apple-system, BlinkMacSystemFont,
-                "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            width: 100%;
-            height: 64px;
-            border-bottom: 1px solid rgba(255,255,255,.055);
-            background: rgba(5,5,6,.92);
-            backdrop-filter: blur(14px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
-            max-width: 1180px;
-            height: 100%;
-            margin: auto;
-            padding: 0 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: .5px;
-        }
-
-        .brand-icon {
-            width: 27px;
-            height: 27px;
-            border-radius: 7px;
-            overflow: hidden;
-            background: #171719;
-        }
-
-        .brand-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-link {
-            color: #77777c;
-            font-size: 10px;
-            font-weight: 650;
-            padding: 8px 11px;
-            border-radius: 7px;
-            transition: .2s ease;
-        }
-
-        .nav-link:hover {
-            color: white;
-            background: rgba(255,255,255,.06);
-        }
-
-        .login-button {
-            border: 0;
-            background: #f1f1f1;
-            color: #080808;
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .login-button:hover {
-            background: white;
-            transform: translateY(-1px);
-        }
-
-        /* MAIN */
-
-        main {
-            max-width: 1180px;
-            margin: auto;
-            padding: 55px 25px 100px;
-        }
-
-        .page-header {
-            margin-bottom: 35px;
-        }
-
-        .eyebrow {
-            display: block;
-            color: #66666b;
-            font-size: 8px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }
-
-        .page-header h1 {
-            font-size: 43px;
-            line-height: 1;
-            letter-spacing: -2px;
-            margin-bottom: 13px;
-        }
-
-        .page-header h1 span {
-            color: #77777c;
-        }
-
-        .page-header p {
-            max-width: 650px;
-            color: #77777c;
-            font-size: 11px;
-            line-height: 1.7;
-        }
-
-        /* LOGIN */
-
-        .login-panel {
-            border: 1px solid rgba(255,255,255,.07);
-            border-radius: 12px;
-            background:
-                radial-gradient(
-                    circle at 50% 0%,
-                    rgba(255,255,255,.055),
-                    transparent 55%
-                ),
-                rgba(255,255,255,.018);
-            padding: 60px 30px;
-            text-align: center;
-        }
-
-        .login-panel h2 {
-            font-size: 21px;
-            margin-bottom: 9px;
-        }
-
-        .login-panel p {
-            max-width: 450px;
-            margin: 0 auto 20px;
-            color: #66666b;
-            font-size: 10px;
-            line-height: 1.7;
-        }
-
-        .discord-button {
-            border: 0;
-            background: #5865f2;
-            color: white;
-            padding: 11px 18px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .discord-button:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.08);
-        }
-
-        .discord-button:disabled {
-            opacity: .65;
-            cursor: wait;
-            transform: none;
-        }
-
-        .login-error {
-            display: none;
-            max-width: 500px;
-            margin: 18px auto 0;
-            padding: 11px 14px;
-            border: 1px solid rgba(255,80,80,.15);
-            border-radius: 8px;
-            background: rgba(255,80,80,.05);
-            color: #ff8b8b;
-            font-size: 9px;
-            line-height: 1.5;
-        }
-
-        /* DASHBOARD */
-
-        .dashboard {
-            display: none;
-            grid-template-columns: 235px minmax(0, 1fr);
-            gap: 15px;
-        }
-
-        .sidebar {
-            height: fit-content;
-            border: 1px solid rgba(255,255,255,.065);
-            border-radius: 10px;
-            background: rgba(255,255,255,.018);
-            padding: 10px;
-        }
-
-        .sidebar-title {
-            color: #454549;
-            font-size: 7px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            padding: 7px 8px 10px;
-        }
-
-        .server-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background: rgba(255,255,255,.045);
-        }
-
-        .server-icon {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            border-radius: 9px;
-            object-fit: cover;
-            background: #171719;
-        }
-
-        .server-name {
-            overflow: hidden;
-            color: #f1f1f1;
-            font-size: 10px;
-            font-weight: 750;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .server-subtitle {
-            color: #55555a;
-            font-size: 7px;
-            margin-top: 3px;
-        }
-
-        .server-list {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .server-button {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            border: 0;
-            background: transparent;
-            color: #77777c;
-            padding: 8px;
-            border-radius: 7px;
-            text-align: left;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .server-button:hover,
-        .server-button.active {
-            color: white;
-            background: rgba(255,255,255,.06);
-        }
-
-        .server-button img {
-            width: 25px;
-            height: 25px;
-            border-radius: 7px;
-            object-fit: cover;
-        }
-
-        .server-button span {
-            overflow: hidden;
-            font-size: 9px;
-            font-weight: 650;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .empty-servers {
-            color: #55555a;
-            font-size: 8px;
-            padding: 10px;
-            line-height: 1.6;
-        }
-
-        /* CONTENT */
-
-        .content {
-            min-width: 0;
-        }
-
-        .content-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .content-header h2 {
-            font-size: 20px;
-        }
-
-        .content-header p {
-            color: #55555a;
-            font-size: 8px;
-            margin-top: 4px;
-        }
-
-        .section {
-            margin-bottom: 25px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,.06);
-            margin-bottom: 9px;
-        }
-
-        .section-title strong {
-            font-size: 12px;
-        }
-
-        .section-title span {
-            color: #55555a;
-            font-size: 7px;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
-        .command-list {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
-        }
-
-        .command {
-            border: 1px solid rgba(255,255,255,.06);
-            border-radius: 9px;
-            background: rgba(255,255,255,.018);
-            padding: 14px;
-            transition: .2s ease;
-        }
-
-        .command:hover {
-            border-color: rgba(255,255,255,.11);
-            background: rgba(255,255,255,.025);
-        }
-
-        .command-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .command-name {
-            font-family: Consolas, Monaco, monospace;
-            color: #e7e7e9;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        .command-description {
-            color: #66666b;
-            font-size: 8px;
-            line-height: 1.6;
-            margin-top: 6px;
-        }
-
-        /* TOGGLES */
-
-        .toggle {
-            position: relative;
-            width: 37px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        .toggle input {
-            display: none;
-        }
-
-        .slider {
-            position: absolute;
-            inset: 0;
-            background: #252527;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .slider::before {
-            content: "";
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            left: 3px;
-            top: 3px;
-            border-radius: 50%;
-            background: #77777c;
-            transition: .2s ease;
-        }
-
-        .toggle input:checked + .slider {
-            background: #f1f1f1;
-        }
-
-        .toggle input:checked + .slider::before {
-            transform: translateX(17px);
-            background: #080808;
-        }
-
-        /* SETTINGS */
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
-        }
-
-        .setting-card {
-            border: 1px solid rgba(255,255,255,.06);
-            border-radius: 9px;
-            background: rgba(255,255,255,.018);
-            padding: 14px;
-        }
-
-        .setting-card label {
-            display: block;
-            color: #d5d5d8;
-            font-size: 9px;
-            font-weight: 700;
-            margin-bottom: 7px;
-        }
-
-        .setting-card input,
-        .setting-card select {
-            width: 100%;
-            border: 1px solid rgba(255,255,255,.08);
-            outline: none;
-            background: #0d0d0f;
-            color: #f5f5f5;
-            padding: 9px;
-            border-radius: 7px;
-            font-size: 9px;
-        }
-
-        .setting-card input:focus,
-        .setting-card select:focus {
-            border-color: rgba(255,255,255,.2);
-        }
-
-        /* ACTIONS */
-
-        .actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .save-button {
-            border: 0;
-            background: #f1f1f1;
-            color: #080808;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .save-button:hover {
-            background: white;
-            transform: translateY(-1px);
-        }
-
-        .save-status {
-            display: none;
-            color: #77777c;
-            font-size: 8px;
-        }
-
-        /* FOOTER */
-
-        footer {
-            border-top: 1px solid rgba(255,255,255,.055);
-            padding: 28px 20px;
-            text-align: center;
-            color: #454549;
-            font-size: 8px;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 800px) {
-
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-
-            .command-list,
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-link {
-                display: none;
-            }
-
-            .page-header h1 {
-                font-size: 35px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard — Oxelon</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #050506;
+    color: #f5f5f5;
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.navbar {
+    height: 64px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: rgba(5,5,6,.94);
+    backdrop-filter: blur(15px);
+}
+
+.nav-container {
+    max-width: 1200px;
+    height: 100%;
+    margin: auto;
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 16px;
+    font-weight: 750;
+}
+
+.brand-icon {
+    width: 28px;
+    height: 28px;
+
+    overflow: hidden;
+    border-radius: 8px;
+    background: #151517;
+}
+
+.brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    padding: 8px 11px;
+
+    color: #77777d;
+    font-size: 10px;
+    font-weight: 650;
+
+    border-radius: 7px;
+    transition: .2s;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255,255,255,.06);
+}
+
+.profile-button {
+    display: none;
+
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 9px;
+
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 8px;
+
+    background: rgba(255,255,255,.035);
+    color: white;
+
+    cursor: pointer;
+}
+
+.profile-button img {
+    width: 24px;
+    height: 24px;
+
+    border-radius: 50%;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px 24px 90px;
+}
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 11px;
+
+    color: #66666c;
+
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    margin-bottom: 13px;
+
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.page-header h1 span {
+    color: #77777d;
+}
+
+.page-header p {
+    max-width: 680px;
+
+    color: #77777d;
+
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* LOGIN */
+
+.login-panel {
+    padding: 65px 30px;
+
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 13px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(255,255,255,.055),
+            transparent 55%
+        ),
+        rgba(255,255,255,.018);
+
+    text-align: center;
+}
+
+.login-panel h2 {
+    margin-bottom: 9px;
+
+    font-size: 22px;
+}
+
+.login-panel p {
+    max-width: 470px;
+    margin: 0 auto 22px;
+
+    color: #66666c;
+
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+.discord-button {
+    border: 0;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+
+    background: #5865f2;
+    color: white;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.discord-button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    display: none;
+
+    grid-template-columns: 255px minmax(0, 1fr);
+    gap: 15px;
+}
+
+/* PROFILE */
+
+.profile-card {
+    margin-bottom: 15px;
+
+    padding: 14px;
+
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    background: #171719;
+}
+
+.profile-name {
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.profile-id {
+    margin-top: 3px;
+
+    color: #55555b;
+
+    font-size: 7px;
+}
+
+.profile-label {
+    margin-bottom: 9px;
+
+    color: #454549;
+
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    height: fit-content;
+
+    padding: 10px;
+
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.sidebar-title {
+    padding: 7px 8px 10px;
+
+    color: #454549;
+
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.server-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.server-card {
+    padding: 10px;
+
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 8px;
+
+    background: rgba(255,255,255,.018);
+
+    transition: .2s;
+}
+
+.server-card:hover {
+    border-color: rgba(255,255,255,.1);
+    background: rgba(255,255,255,.04);
+}
+
+.server-top {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.server-icon {
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    object-fit: cover;
+
+    background: #171719;
+}
+
+.server-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.server-name {
+    overflow: hidden;
+
+    color: #eeeeef;
+
+    font-size: 9px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.server-members {
+    margin-top: 3px;
+
+    color: #55555b;
+
+    font-size: 7px;
+}
+
+.server-actions {
+    display: flex;
+    gap: 5px;
+
+    margin-top: 9px;
+}
+
+.server-action {
+    flex: 1;
+
+    padding: 7px;
+
+    border: 0;
+    border-radius: 6px;
+
+    background: rgba(255,255,255,.06);
+    color: #cfcfd2;
+
+    font-size: 7px;
+    font-weight: 750;
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.server-action:hover {
+    background: rgba(255,255,255,.1);
+    color: white;
+}
+
+.add-button {
+    background: #5865f2;
+    color: white;
+}
+
+.add-button:hover {
+    background: #6975f5;
+}
+
+/* CONTENT */
+
+.content {
+    min-width: 0;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.content-header h2 {
+    font-size: 20px;
+}
+
+.content-header p {
+    margin-top: 4px;
+
+    color: #55555b;
+
+    font-size: 8px;
+}
+
+/* SECTIONS */
+
+.section {
+    margin-bottom: 25px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 10px;
+    margin-bottom: 9px;
+
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.section-title strong {
+    font-size: 12px;
+}
+
+.section-title span {
+    color: #55555b;
+
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.command-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 8px;
+}
+
+.command {
+    padding: 14px;
+
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.018);
+
+    transition: .2s;
+}
+
+.command:hover {
+    border-color: rgba(255,255,255,.11);
+    background: rgba(255,255,255,.025);
+}
+
+.command-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.command-name {
+    color: #e7e7e9;
+
+    font-family: Consolas, Monaco, monospace;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.command-description {
+    margin-top: 6px;
+
+    color: #66666c;
+
+    font-size: 8px;
+    line-height: 1.6;
+}
+
+/* TOGGLE */
+
+.toggle {
+    position: relative;
+
+    width: 37px;
+    height: 20px;
+
+    flex-shrink: 0;
+}
+
+.toggle input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 20px;
+
+    background: #252527;
+
+    cursor: pointer;
+}
+
+.slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 14px;
+    height: 14px;
+
+    left: 3px;
+    top: 3px;
+
+    border-radius: 50%;
+
+    background: #77777d;
+
+    transition: .2s;
+}
+
+.toggle input:checked + .slider {
+    background: #f1f1f1;
+}
+
+.toggle input:checked + .slider::before {
+    transform: translateX(17px);
+    background: #080808;
+}
+
+/* SETTINGS */
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+}
+
+.setting-card {
+    padding: 14px;
+
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.setting-card label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #d5d5d8;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.setting-card input {
+    width: 100%;
+
+    padding: 9px;
+
+    outline: none;
+
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 7px;
+
+    background: #0d0d0f;
+    color: white;
+
+    font-size: 9px;
+}
+
+.setting-card input:focus {
+    border-color: rgba(255,255,255,.2);
+}
+
+/* ACTIONS */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.save-button {
+    padding: 10px 16px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #f1f1f1;
+    color: #080808;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background: white;
+}
+
+.save-status {
+    display: none;
+
+    color: #77777d;
+
+    font-size: 8px;
+}
+
+.empty {
+    padding: 15px;
+
+    color: #55555b;
+
+    font-size: 8px;
+    text-align: center;
+}
+
+footer {
+    padding: 28px 20px;
+
+    border-top: 1px solid rgba(255,255,255,.055);
+
+    color: #454549;
+
+    font-size: 8px;
+    text-align: center;
+}
+
+@media(max-width:800px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .command-list,
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-link {
+        display: none;
+    }
+
+    .page-header h1 {
+        font-size: 34px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header class="navbar">
 
-    <div class="nav-container">
+<div class="nav-container">
 
-        <a href="index.html" class="brand">
+<a href="index.html" class="brand">
 
-            <div class="brand-icon">
-                <img
-                    src="images/oxelon.png"
-                    alt="Oxelon"
-                >
-            </div>
+<div class="brand-icon">
+<img src="images/oxelon.png" alt="Oxelon">
+</div>
 
-            <span>Oxelon</span>
+<span>Oxelon</span>
 
-        </a>
+</a>
 
-        <div class="nav-right">
+<div class="nav-right">
 
-            <a href="index.html" class="nav-link">
-                Home
-            </a>
+<a href="index.html" class="nav-link">Home</a>
 
-            <a href="features.html" class="nav-link">
-                Features
-            </a>
+<a href="features.html" class="nav-link">Features</a>
 
-            <button
-                class="login-button"
-                id="loginButton"
-                type="button"
-                onclick="loginWithDiscord()"
-            >
-                Login with Discord
-            </button>
+<div class="profile-button" id="profileButton">
 
-        </div>
+<img id="navAvatar" src="images/oxelon.png">
 
-    </div>
+<span id="navUsername">Discord</span>
+
+</div>
+
+</div>
+
+</div>
 
 </header>
 
 
 <main>
 
-    <div class="page-header">
+<div class="page-header">
 
-        <span class="eyebrow">
-            OXELON DASHBOARD
-        </span>
+<span class="eyebrow">
+OXELON DASHBOARD
+</span>
 
-        <h1>
-            Manage your server.
-            <br>
-            <span>Configure Oxelon your way.</span>
-        </h1>
+<h1>
+Manage your server.
+<br>
+<span>Configure Oxelon your way.</span>
+</h1>
 
-        <p>
-            Connect your Discord account to manage the servers
-            where you have permission to configure Oxelon.
-        </p>
+<p>
+Connect your Discord account to manage the servers where
+you have permission to configure Oxelon.
+</p>
 
-    </div>
+</div>
 
 
-    <!-- LOGIN PANEL -->
+<section class="login-panel" id="loginPanel">
 
-    <section
-        class="login-panel"
-        id="loginPanel"
-    >
+<h2>
+Sign in with Discord
+</h2>
 
-        <h2>
-            Sign in with Discord
-        </h2>
+<p>
+Authenticate with Discord to view your profile, servers,
+and Oxelon configuration.
+</p>
 
-        <p>
-            Authenticate with Discord to securely view your
-            servers and configure Oxelon's commands.
-        </p>
+<button class="discord-button" onclick="loginWithDiscord()">
+Continue with Discord
+</button>
 
-        <button
-            class="discord-button"
-            id="discordLoginButton"
-            type="button"
-            onclick="loginWithDiscord()"
-        >
-            Continue with Discord
-        </button>
+</section>
 
-        <div
-            class="login-error"
-            id="loginError"
-        ></div>
 
-    </section>
+<section class="dashboard" id="dashboard">
 
+<aside class="sidebar">
 
-    <!-- DASHBOARD -->
+<div class="profile-card">
 
-    <section
-        class="dashboard"
-        id="dashboard"
-    >
+<div class="profile-label">
+DISCORD PROFILE
+</div>
 
-        <aside class="sidebar">
+<div class="profile">
 
-            <div class="sidebar-title">
-                YOUR SERVERS
-            </div>
+<img
+class="profile-avatar"
+id="profileAvatar"
+src="images/oxelon.png"
+>
 
-            <div
-                class="server-card"
-                id="selectedServer"
-            >
+<div>
 
-                <img
-                    class="server-icon"
-                    id="selectedServerIcon"
-                    src="images/oxelon.png"
-                    alt="Server"
-                >
+<div
+class="profile-name"
+id="profileName"
+>
+Loading...
+</div>
 
-                <div>
+<div
+class="profile-id"
+id="profileId"
+>
+Discord
+</div>
 
-                    <div
-                        class="server-name"
-                        id="selectedServerName"
-                    >
-                        Select a server
-                    </div>
+</div>
 
-                    <div class="server-subtitle">
-                        Oxelon configuration
-                    </div>
+</div>
 
-                </div>
+</div>
 
-            </div>
 
-            <div
-                class="server-list"
-                id="serverList"
-            ></div>
+<div class="sidebar-title">
+YOUR SERVERS
+</div>
 
-        </aside>
+<div
+class="server-list"
+id="serverList"
+></div>
 
+</aside>
 
-        <section class="content">
 
-            <div class="content-header">
+<section class="content">
 
-                <div>
+<div class="content-header">
 
-                    <h2>
-                        Server Configuration
-                    </h2>
+<div>
 
-                    <p id="serverLabel">
-                        No server selected
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <!-- MODERATION -->
-
-            <div class="section">
-
-                <div class="section-title">
-
-                    <strong>
-                        Moderation
-                    </strong>
-
-                    <span>
-                        MEMBER MANAGEMENT
-                    </span>
-
-                </div>
-
-                <div class="command-list">
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /warn
-                                </div>
-
-                                <div class="command-description">
-                                    Warn a member and record the moderation action.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="warn"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /mute
-                                </div>
-
-                                <div class="command-description">
-                                    Restrict a member from communicating.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="mute"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /kick
-                                </div>
-
-                                <div class="command-description">
-                                    Remove a member from the server.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="kick"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /ban
-                                </div>
-
-                                <div class="command-description">
-                                    Permanently ban a member.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="ban"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /purge
-                                </div>
-
-                                <div class="command-description">
-                                    Remove multiple messages from a channel.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="purge"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- SERVER MANAGEMENT -->
-
-            <div class="section">
-
-                <div class="section-title">
-
-                    <strong>
-                        Server Management
-                    </strong>
-
-                    <span>
-                        SERVER CONTROLS
-                    </span>
-
-                </div>
-
-                <div class="command-list">
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /lock
-                                </div>
-
-                                <div class="command-description">
-                                    Lock a channel and restrict normal communication.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="lock"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /unlock
-                                </div>
-
-                                <div class="command-description">
-                                    Restore normal channel communication.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="unlock"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /slowmode
-                                </div>
-
-                                <div class="command-description">
-                                    Configure the slowmode delay for a channel.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="slowmode"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /roleadd
-                                </div>
-
-                                <div class="command-description">
-                                    Add a role to a server member.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="roleadd"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /nick
-                                </div>
-
-                                <div class="command-description">
-                                    Change a member's server nickname.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="nick"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- COMMUNITY -->
-
-            <div class="section">
-
-                <div class="section-title">
-
-                    <strong>
-                        Community
-                    </strong>
-
-                    <span>
-                        COMMUNITY TOOLS
-                    </span>
-
-                </div>
-
-                <div class="command-list">
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /welcome
-                                </div>
-
-                                <div class="command-description">
-                                    Configure automated welcome messages.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="welcome"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /promotion
-                                </div>
-
-                                <div class="command-description">
-                                    Create and manage server promotion content.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="promotion"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    /review
-                                </div>
-
-                                <div class="command-description">
-                                    Manage community reviews and feedback.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="review"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CONFIGURATION -->
-
-            <div class="section">
-
-                <div class="section-title">
-
-                    <strong>
-                        Configuration
-                    </strong>
-
-                    <span>
-                        SERVER SETTINGS
-                    </span>
-
-                </div>
-
-                <div class="settings-grid">
-
-                    <div class="setting-card">
-
-                        <label for="prefix">
-                            Bot Prefix
-                        </label>
-
-                        <input
-                            id="prefix"
-                            type="text"
-                            maxlength="5"
-                            placeholder="!"
-                            value="!"
-                        >
-
-                    </div>
-
-
-                    <div class="setting-card">
-
-                        <label for="logChannel">
-                            Log Channel ID
-                        </label>
-
-                        <input
-                            id="logChannel"
-                            type="text"
-                            placeholder="Channel ID"
-                        >
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- SECURITY -->
-
-            <div class="section">
-
-                <div class="section-title">
-
-                    <strong>
-                        Security
-                    </strong>
-
-                    <span>
-                        SERVER PROTECTION
-                    </span>
-
-                </div>
-
-                <div class="command-list">
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    Raid Protection
-                                </div>
-
-                                <div class="command-description">
-                                    Detect and respond to suspicious server activity.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="raid_protection"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="command">
-
-                        <div class="command-top">
-
-                            <div>
-
-                                <div class="command-name">
-                                    Security Logs
-                                </div>
-
-                                <div class="command-description">
-                                    Record important security and moderation events.
-                                </div>
-
-                            </div>
-
-                            <label class="toggle">
-
-                                <input
-                                    type="checkbox"
-                                    data-command="security_logs"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- SAVE -->
-
-            <div class="actions">
-
-                <button
-                    class="save-button"
-                    type="button"
-                    onclick="saveSettings()"
-                >
-                    Save Changes
-                </button>
-
-                <span
-                    class="save-status"
-                    id="saveStatus"
-                >
-                    Changes saved.
-                </span>
-
-            </div>
-
-        </section>
-
-    </section>
+<h2>
+Server Configuration
+</h2>
+
+<p id="serverLabel">
+Select a server to begin.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- MODERATION -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Moderation</strong>
+
+<span>MEMBER MANAGEMENT</span>
+
+</div>
+
+<div class="command-list">
+
+<script>
+const moderationCommands = [
+    ["warn","Warn a member and record the moderation action."],
+    ["mute","Restrict a member from communicating."],
+    ["kick","Remove a member from the server."],
+    ["ban","Permanently ban a member."],
+    ["purge","Remove multiple messages from a channel."],
+    ["infraction","Manage member infractions and moderation history."],
+    ["note","Add a moderation note to a member."]
+];
+</script>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/warn</div>
+<div class="command-description">Warn a member and record the moderation action.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="warn" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/mute</div>
+<div class="command-description">Restrict a member from communicating.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="mute" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/kick</div>
+<div class="command-description">Remove a member from the server.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="kick" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/ban</div>
+<div class="command-description">Permanently ban a member.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="ban" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/purge</div>
+<div class="command-description">Remove multiple messages from a channel.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="purge" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/infraction</div>
+<div class="command-description">View and manage member infractions.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="infraction" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/note</div>
+<div class="command-description">Create a private moderation note.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="note" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- SERVER MANAGEMENT -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Server Management</strong>
+
+<span>SERVER CONTROLS</span>
+
+</div>
+
+<div class="command-list">
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/lock</div>
+<div class="command-description">Lock a channel.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="lock" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/unlock</div>
+<div class="command-description">Restore normal channel communication.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="unlock" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/slowmode</div>
+<div class="command-description">Configure channel slowmode.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="slowmode" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/roleadd</div>
+<div class="command-description">Add a role to a member.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="roleadd" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/rolemenu</div>
+<div class="command-description">Manage server role settings.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="rolemenu" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/nick</div>
+<div class="command-description">Change a member's nickname.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="nick" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/slowmode</div>
+<div class="command-description">Control message cooldowns.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="slowmode" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- COMMUNITY -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Community</strong>
+
+<span>COMMUNITY TOOLS</span>
+
+</div>
+
+<div class="command-list">
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/welcome</div>
+<div class="command-description">Configure automated welcome messages.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="welcome" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/promotion</div>
+<div class="command-description">Create and manage server promotion content.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="promotion" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/review</div>
+<div class="command-description">Manage community reviews and feedback.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="review" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/affiliate</div>
+<div class="command-description">Manage Oxelon server partnerships.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="affiliate" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/template</div>
+<div class="command-description">Load and manage server templates.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="template" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- INFORMATION -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Information</strong>
+
+<span>SERVER INFORMATION</span>
+
+</div>
+
+<div class="command-list">
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/botinfo</div>
+<div class="command-description">View Oxelon information and protected servers.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="botinfo" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/serverinfo</div>
+<div class="command-description">View detailed server information.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="serverinfo" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/userinfo</div>
+<div class="command-description">View information about a Discord member.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="userinfo" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/members</div>
+<div class="command-description">View server member information.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="members" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/avatar</div>
+<div class="command-description">Display a member's Discord avatar.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="avatar" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">/serverlogo</div>
+<div class="command-description">Display the server's icon.</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="serverlogo" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- SECURITY -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Security</strong>
+
+<span>SERVER PROTECTION</span>
+
+</div>
+
+<div class="command-list">
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">Raid Protection</div>
+<div class="command-description">
+Detect and respond to suspicious server activity.
+</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="raid_protection" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">Security Logs</div>
+<div class="command-description">
+Record important security and moderation events.
+</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="security_logs" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+<div class="command">
+<div class="command-top">
+<div>
+<div class="command-name">Moderation Logs</div>
+<div class="command-description">
+Record bans, kicks, warns and other actions.
+</div>
+</div>
+<label class="toggle">
+<input type="checkbox" data-command="modlogs" checked>
+<span class="slider"></span>
+</label>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- CONFIGURATION -->
+
+<div class="section">
+
+<div class="section-title">
+
+<strong>Configuration</strong>
+
+<span>SERVER SETTINGS</span>
+
+</div>
+
+<div class="settings-grid">
+
+<div class="setting-card">
+
+<label for="prefix">
+Bot Prefix
+</label>
+
+<input
+id="prefix"
+type="text"
+maxlength="5"
+value="!"
+placeholder="!"
+>
+
+</div>
+
+<div class="setting-card">
+
+<label for="logChannel">
+Log Channel ID
+</label>
+
+<input
+id="logChannel"
+type="text"
+placeholder="Channel ID"
+>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="save-button"
+onclick="saveSettings()"
+>
+Save Changes
+</button>
+
+<span
+class="save-status"
+id="saveStatus"
+>
+Changes saved.
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+</section>
 
 </main>
 
 
 <footer>
-    © 2026 Oxelon. All rights reserved.
+© 2026 Oxelon. All rights reserved.
 </footer>
 
 
 <script>
 
-    let selectedGuild = null;
+let selectedGuild = null;
 
 
-    /*
-     * ============================================================
-     * DISCORD LOGIN
-     * ============================================================
-     *
-     * This starts the OAuth flow.
-     *
-     * DO NOT change this to /api/auth/callback.
-     *
-     * /api/auth/discord starts OAuth.
-     * /api/auth/callback receives Discord's response.
-     */
+/* ------------------------------
+   DISCORD LOGIN
+------------------------------ */
 
-    function loginWithDiscord() {
+function loginWithDiscord() {
 
-        const button =
-            document.getElementById(
-                "discordLoginButton"
+    window.location.href =
+        "/api/auth/discord";
+
+}
+
+
+/* ------------------------------
+   LOAD PROFILE
+------------------------------ */
+
+async function loadProfile() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/auth/me",
+                {
+                    credentials: "include"
+                }
             );
 
-        if (button) {
-
-            button.disabled = true;
-
-            button.textContent =
-                "Connecting to Discord...";
-
+        if (!response.ok) {
+            return;
         }
 
-        window.location.href =
-            "/api/auth/discord";
-    }
+        const user =
+            await response.json();
 
+        const avatar =
+            user.avatar ||
+            user.avatar_url ||
+            "images/oxelon.png";
 
-    /*
-     * ============================================================
-     * LOAD AUTHENTICATED SESSION
-     * ============================================================
-     */
+        const username =
+            user.global_name ||
+            user.username ||
+            "Discord User";
 
-    async function loadGuilds() {
+        document
+            .getElementById("profileAvatar")
+            .src = avatar;
 
-        try {
+        document
+            .getElementById("profileName")
+            .textContent = username;
 
-            const response =
-                await fetch(
-                    "/api/auth/guilds",
-                    {
-                        method: "GET",
-                        credentials: "include",
-                        cache: "no-store"
-                    }
-                );
+        document
+            .getElementById("profileId")
+            .textContent =
+                user.id
+                    ? `ID: ${user.id}`
+                    : "Discord";
 
+        document
+            .getElementById("navAvatar")
+            .src = avatar;
 
-            /*
-             * User isn't logged in.
-             */
+        document
+            .getElementById("navUsername")
+            .textContent = username;
 
-            if (response.status === 401) {
-
-                showLogin();
-
-                return;
-
-            }
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `Server returned ${response.status}`
-                );
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            /*
-             * Hide login.
-             */
-
-            document
-                .getElementById("loginPanel")
-                .style.display = "none";
-
-
-            /*
-             * Show dashboard.
-             */
-
-            document
-                .getElementById("dashboard")
-                .style.display = "grid";
-
-
-            /*
-             * Display servers.
-             */
-
-            renderGuilds(
-                Array.isArray(data.guilds)
-                    ? data.guilds
-                    : []
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Failed to load Discord session:",
-                error
-            );
-
-            showLogin();
-
-        }
-
-    }
-
-
-    /*
-     * ============================================================
-     * SHOW LOGIN
-     * ============================================================
-     */
-
-    function showLogin() {
+        document
+            .getElementById("profileButton")
+            .style.display = "flex";
 
         document
             .getElementById("loginPanel")
-            .style.display = "block";
-
+            .style.display = "none";
 
         document
             .getElementById("dashboard")
-            .style.display = "none";
+            .style.display = "grid";
+
+        loadGuilds();
+
+    } catch (error) {
+
+        console.log(
+            "Not authenticated."
+        );
+
+    }
+
+}
+
+
+/* ------------------------------
+   LOAD GUILDS
+------------------------------ */
+
+async function loadGuilds() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/auth/guilds",
+                {
+                    credentials: "include"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Unable to load servers."
+            );
+        }
+
+        const data =
+            await response.json();
+
+        renderGuilds(
+            data.guilds || []
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        document
+            .getElementById("serverList")
+            .innerHTML = `
+                <div class="empty">
+                    Unable to load your servers.
+                </div>
+            `;
+
+    }
+
+}
+
+
+/* ------------------------------
+   RENDER SERVERS
+------------------------------ */
+
+function renderGuilds(guilds) {
+
+    const list =
+        document.getElementById(
+            "serverList"
+        );
+
+    list.innerHTML = "";
+
+    if (!guilds.length) {
+
+        list.innerHTML = `
+            <div class="empty">
+                No manageable servers found.
+            </div>
+        `;
+
+        return;
 
     }
 
 
-    /*
-     * ============================================================
-     * RENDER SERVERS
-     * ============================================================
-     */
+    guilds.forEach(guild => {
 
-    function renderGuilds(guilds) {
-
-        const list =
-            document.getElementById(
-                "serverList"
+        const card =
+            document.createElement(
+                "div"
             );
 
-
-        list.innerHTML = "";
-
-
-        if (!guilds.length) {
-
-            list.innerHTML = `
-                <div class="empty-servers">
-                    No manageable servers were found.
-                    Make sure you are the owner or have
-                    administrator permissions.
-                </div>
-            `;
-
-            return;
-
-        }
+        card.className =
+            "server-card";
 
 
-        guilds.forEach(guild => {
+        const top =
+            document.createElement(
+                "div"
+            );
 
-            const button =
+        top.className =
+            "server-top";
+
+
+        const icon =
+            document.createElement(
+                "img"
+            );
+
+        icon.className =
+            "server-icon";
+
+        icon.src =
+            guild.icon ||
+            "images/oxelon.png";
+
+
+        const info =
+            document.createElement(
+                "div"
+            );
+
+        info.className =
+            "server-info";
+
+
+        const name =
+            document.createElement(
+                "div"
+            );
+
+        name.className =
+            "server-name";
+
+        name.textContent =
+            guild.name;
+
+
+        const members =
+            document.createElement(
+                "div"
+            );
+
+        members.className =
+            "server-members";
+
+        members.textContent =
+            guild.member_count !== undefined
+                ? `${guild.member_count} members`
+                : "Discord server";
+
+
+        info.appendChild(name);
+        info.appendChild(members);
+
+        top.appendChild(icon);
+        top.appendChild(info);
+
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+        actions.className =
+            "server-actions";
+
+
+        /*
+         * If your API returns installed === true,
+         * show Manage.
+         */
+
+        if (guild.installed === true) {
+
+            const manage =
                 document.createElement(
                     "button"
                 );
 
+            manage.className =
+                "server-action";
 
-            button.type =
-                "button";
+            manage.textContent =
+                "Manage";
 
+            manage.onclick =
+                () => selectGuild(guild);
 
-            button.className =
-                "server-button";
-
-
-            const icon =
-                document.createElement(
-                    "img"
-                );
-
-
-            /*
-             * Discord guild icon.
-             */
-
-            if (guild.icon) {
-
-                icon.src =
-                    `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=64`;
-
-            } else {
-
-                icon.src =
-                    "images/oxelon.png";
-
-            }
-
-
-            icon.alt =
-                "";
-
-
-            const name =
-                document.createElement(
-                    "span"
-                );
-
-
-            name.textContent =
-                guild.name;
-
-
-            button.appendChild(icon);
-
-            button.appendChild(name);
-
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    document
-                        .querySelectorAll(
-                            ".server-button"
-                        )
-                        .forEach(item => {
-
-                            item.classList.remove(
-                                "active"
-                            );
-
-                        });
-
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    selectGuild(
-                        guild
-                    );
-
-                }
+            actions.appendChild(
+                manage
             );
-
-
-            list.appendChild(
-                button
-            );
-
-        });
-
-    }
-
-
-    /*
-     * ============================================================
-     * SELECT SERVER
-     * ============================================================
-     */
-
-    async function selectGuild(guild) {
-
-        selectedGuild =
-            guild;
-
-
-        document
-            .getElementById(
-                "selectedServerName"
-            )
-            .textContent =
-                guild.name;
-
-
-        document
-            .getElementById(
-                "serverLabel"
-            )
-            .textContent =
-                guild.name;
-
-
-        const serverIcon =
-            document.getElementById(
-                "selectedServerIcon"
-            );
-
-
-        if (guild.icon) {
-
-            serverIcon.src =
-                `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128`;
 
         } else {
 
-            serverIcon.src =
-                "images/oxelon.png";
-
-        }
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/guilds/${guild.id}/settings`,
-                    {
-                        method: "GET",
-                        credentials: "include",
-                        cache: "no-store"
-                    }
+            const add =
+                document.createElement(
+                    "button"
                 );
 
+            add.className =
+                "server-action add-button";
 
-            if (!response.ok) {
+            add.textContent =
+                "Add Bot";
 
-                return;
+            add.onclick =
+                () => addBot(guild.id);
 
-            }
-
-
-            const settings =
-                await response.json();
-
-
-            /*
-             * Restore command toggles.
-             */
-
-            document
-                .querySelectorAll(
-                    "[data-command]"
-                )
-                .forEach(input => {
-
-                    const command =
-                        input.dataset.command;
-
-
-                    if (
-                        Object.prototype.hasOwnProperty.call(
-                            settings,
-                            command
-                        )
-                    ) {
-
-                        input.checked =
-                            Boolean(
-                                settings[command]
-                            );
-
-                    }
-
-                });
-
-
-            /*
-             * Restore prefix.
-             */
-
-            if (
-                settings.prefix !== undefined
-            ) {
-
-                document
-                    .getElementById(
-                        "prefix"
-                    )
-                    .value =
-                        settings.prefix;
-
-            }
-
-
-            /*
-             * Restore log channel.
-             */
-
-            if (
-                settings.log_channel !== undefined
-            ) {
-
-                document
-                    .getElementById(
-                        "logChannel"
-                    )
-                    .value =
-                        settings.log_channel;
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Failed to load server settings:",
-                error
+            actions.appendChild(
+                add
             );
 
         }
 
-    }
+
+        card.appendChild(top);
+        card.appendChild(actions);
+
+        list.appendChild(card);
+
+    });
+
+}
 
 
-    /*
-     * ============================================================
-     * SAVE SETTINGS
-     * ============================================================
-     */
+/* ------------------------------
+   ADD BOT
+------------------------------ */
 
-    async function saveSettings() {
+function addBot(guildId) {
 
-        if (!selectedGuild) {
+    const clientId =
+        "YOUR_DISCORD_CLIENT_ID";
 
-            alert(
-                "Select a server first."
+    const permissions =
+        "8";
+
+    const url =
+        `https://discord.com/oauth2/authorize` +
+        `?client_id=${encodeURIComponent(clientId)}` +
+        `&scope=bot%20applications.commands` +
+        `&permissions=${permissions}` +
+        `&guild_id=${encodeURIComponent(guildId)}`;
+
+    window.location.href = url;
+
+}
+
+
+/* ------------------------------
+   SELECT SERVER
+------------------------------ */
+
+async function selectGuild(guild) {
+
+    selectedGuild =
+        guild;
+
+
+    document
+        .getElementById(
+            "serverLabel"
+        )
+        .textContent =
+            guild.name;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/guilds/${guild.id}/settings`,
+                {
+                    credentials: "include"
+                }
             );
 
+        if (!response.ok) {
             return;
-
         }
 
 
-        const settings = {};
+        const settings =
+            await response.json();
 
-
-        /*
-         * Get command settings.
-         */
 
         document
             .querySelectorAll(
@@ -1865,125 +1773,186 @@
             )
             .forEach(input => {
 
-                settings[
-                    input.dataset.command
-                ] =
-                    input.checked;
+                const command =
+                    input.dataset.command;
+
+                if (
+                    Object.prototype
+                        .hasOwnProperty
+                        .call(
+                            settings,
+                            command
+                        )
+                ) {
+
+                    input.checked =
+                        Boolean(
+                            settings[command]
+                        );
+
+                }
 
             });
 
 
-        /*
-         * Prefix.
-         */
+        if (
+            settings.prefix !== undefined
+        ) {
 
-        settings.prefix =
             document
                 .getElementById(
                     "prefix"
                 )
-                .value
-                .trim();
+                .value =
+                    settings.prefix;
+
+        }
 
 
-        /*
-         * Log channel.
-         */
+        if (
+            settings.log_channel !== undefined
+        ) {
 
-        settings.log_channel =
             document
                 .getElementById(
                     "logChannel"
                 )
-                .value
-                .trim();
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/guilds/${selectedGuild.id}/settings`,
-                    {
-                        method: "PUT",
-
-                        credentials: "include",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(
-                                settings
-                            )
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `Save failed: ${response.status}`
-                );
-
-            }
-
-
-            const status =
-                document
-                    .getElementById(
-                        "saveStatus"
-                    );
-
-
-            status.style.display =
-                "inline";
-
-
-            setTimeout(
-                () => {
-
-                    status.style.display =
-                        "none";
-
-                },
-                2500
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Save error:",
-                error
-            );
-
-
-            alert(
-                "Unable to save the server settings."
-            );
+                .value =
+                    settings.log_channel;
 
         }
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load settings:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ------------------------------
+   SAVE SETTINGS
+------------------------------ */
+
+async function saveSettings() {
+
+    if (!selectedGuild) {
+
+        alert(
+            "Select a server first."
+        );
+
+        return;
 
     }
 
 
-    /*
-     * ============================================================
-     * START
-     * ============================================================
-     */
+    const settings = {};
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        () => {
 
-            loadGuilds();
+    document
+        .querySelectorAll(
+            "[data-command]"
+        )
+        .forEach(input => {
+
+            settings[
+                input.dataset.command
+            ] =
+                input.checked;
+
+        });
+
+
+    settings.prefix =
+        document
+            .getElementById(
+                "prefix"
+            )
+            .value
+            .trim();
+
+
+    settings.log_channel =
+        document
+            .getElementById(
+                "logChannel"
+            )
+            .value
+            .trim();
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/guilds/${selectedGuild.id}/settings`,
+                {
+                    method: "PUT",
+
+                    credentials: "include",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            settings
+                        )
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Save failed"
+            );
 
         }
-    );
+
+
+        const status =
+            document.getElementById(
+                "saveStatus"
+            );
+
+        status.style.display =
+            "inline";
+
+
+        setTimeout(() => {
+
+            status.style.display =
+                "none";
+
+        }, 2500);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to save the server settings."
+        );
+
+    }
+
+}
+
+
+/* ------------------------------
+   START
+------------------------------ */
+
+loadProfile();
 
 </script>
 
