@@ -108,12 +108,6 @@
             font-size: 10px;
             font-weight: 750;
             cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .login-button:hover {
-            background: white;
-            transform: translateY(-1px);
         }
 
         main {
@@ -159,11 +153,11 @@
             background:
                 radial-gradient(
                     circle at 50% 0%,
-                    rgba(255,255,255,.055),
+                    rgba(88,101,242,.12),
                     transparent 55%
                 ),
                 rgba(255,255,255,.018);
-            padding: 60px 30px;
+            padding: 65px 30px;
             text-align: center;
         }
 
@@ -184,7 +178,7 @@
             border: 0;
             background: #5865f2;
             color: white;
-            padding: 11px 18px;
+            padding: 12px 20px;
             border-radius: 8px;
             font-size: 10px;
             font-weight: 750;
@@ -193,8 +187,8 @@
         }
 
         .discord-button:hover {
+            background: #4752c4;
             transform: translateY(-1px);
-            filter: brightness(1.08);
         }
 
         .dashboard {
@@ -217,40 +211,6 @@
             font-weight: 800;
             letter-spacing: 1.5px;
             padding: 7px 8px 10px;
-        }
-
-        .server-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background: rgba(255,255,255,.045);
-        }
-
-        .server-icon {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            border-radius: 9px;
-            object-fit: cover;
-            background: #171719;
-        }
-
-        .server-name {
-            overflow: hidden;
-            color: #f1f1f1;
-            font-size: 10px;
-            font-weight: 750;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .server-subtitle {
-            color: #55555a;
-            font-size: 7px;
-            margin-top: 3px;
         }
 
         .server-list {
@@ -300,10 +260,6 @@
         }
 
         .content-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
             margin-bottom: 18px;
         }
 
@@ -314,6 +270,7 @@
         .content-header p {
             color: #55555a;
             font-size: 8px;
+            margin-top: 5px;
         }
 
         .section {
@@ -351,12 +308,6 @@
             border-radius: 9px;
             background: rgba(255,255,255,.018);
             padding: 14px;
-            transition: .2s ease;
-        }
-
-        .command:hover {
-            border-color: rgba(255,255,255,.11);
-            background: rgba(255,255,255,.025);
         }
 
         .command-top {
@@ -397,7 +348,6 @@
             background: #252527;
             border-radius: 20px;
             cursor: pointer;
-            transition: .2s ease;
         }
 
         .slider::before {
@@ -442,8 +392,7 @@
             margin-bottom: 7px;
         }
 
-        .setting-card input,
-        .setting-card select {
+        .setting-card input {
             width: 100%;
             border: 1px solid rgba(255,255,255,.08);
             outline: none;
@@ -452,11 +401,6 @@
             padding: 9px;
             border-radius: 7px;
             font-size: 9px;
-        }
-
-        .setting-card input:focus,
-        .setting-card select:focus {
-            border-color: rgba(255,255,255,.2);
         }
 
         .actions {
@@ -475,12 +419,6 @@
             font-size: 10px;
             font-weight: 750;
             cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .save-button:hover {
-            background: white;
-            transform: translateY(-1px);
         }
 
         .save-status {
@@ -498,7 +436,6 @@
         }
 
         @media (max-width: 800px) {
-
             .dashboard {
                 grid-template-columns: 1fr;
             }
@@ -522,44 +459,28 @@
 <body>
 
 <header class="navbar">
-
     <div class="nav-container">
 
         <a href="index.html" class="brand">
-
             <div class="brand-icon">
-                <img
-                    src="images/oxelon.png"
-                    alt="Oxelon"
-                >
+                <img src="images/oxelon.png" alt="Oxelon">
             </div>
-
             <span>Oxelon</span>
-
         </a>
 
         <div class="nav-right">
-
-            <a href="index.html" class="nav-link">
-                Home
-            </a>
-
-            <a href="features.html" class="nav-link">
-                Features
-            </a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="features.html" class="nav-link">Features</a>
 
             <button
                 class="login-button"
-                id="loginButton"
                 onclick="loginWithDiscord()"
             >
                 Login with Discord
             </button>
-
         </div>
 
     </div>
-
 </header>
 
 
@@ -585,10 +506,9 @@
     </div>
 
 
-    <section
-        class="login-panel"
-        id="loginPanel"
-    >
+    <!-- LOGIN -->
+
+    <section class="login-panel" id="loginPanel">
 
         <h2>
             Sign in with Discord
@@ -609,10 +529,9 @@
     </section>
 
 
-    <section
-        class="dashboard"
-        id="dashboard"
-    >
+    <!-- DASHBOARD -->
+
+    <section class="dashboard" id="dashboard">
 
         <aside class="sidebar">
 
@@ -621,38 +540,17 @@
             </div>
 
             <div
-                class="server-card"
-                id="selectedServer"
-            >
-
-                <img
-                    class="server-icon"
-                    id="selectedServerIcon"
-                    src="images/oxelon.png"
-                    alt=""
-                >
-
-                <div>
-
-                    <div
-                        class="server-name"
-                        id="selectedServerName"
-                    >
-                        Select a server
-                    </div>
-
-                    <div class="server-subtitle">
-                        Oxelon configuration
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div
                 class="server-list"
                 id="serverList"
-            ></div>
+            >
+                <div style="
+                    color:#55555a;
+                    font-size:8px;
+                    padding:10px;
+                ">
+                    Loading servers...
+                </div>
+            </div>
 
         </aside>
 
@@ -661,437 +559,292 @@
 
             <div class="content-header">
 
-                <div>
+                <h2>
+                    Server Configuration
+                </h2>
 
-                    <h2>
-                        Server Configuration
-                    </h2>
-
-                    <p id="serverLabel">
-                        No server selected
-                    </p>
-
-                </div>
+                <p id="serverLabel">
+                    Select a server
+                </p>
 
             </div>
 
 
+            <!-- MODERATION -->
+
             <div class="section">
 
                 <div class="section-title">
-
-                    <strong>
-                        Moderation
-                    </strong>
-
-                    <span>
-                        MEMBER MANAGEMENT
-                    </span>
-
+                    <strong>Moderation</strong>
+                    <span>MEMBER MANAGEMENT</span>
                 </div>
 
                 <div class="command-list">
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /warn
-                                </div>
-
+                                <div class="command-name">/warn</div>
                                 <div class="command-description">
                                     Warn a member and record the moderation action.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="warn"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="warn" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /mute
-                                </div>
-
+                                <div class="command-name">/mute</div>
                                 <div class="command-description">
                                     Restrict a member from communicating.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="mute"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="mute" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /kick
-                                </div>
-
+                                <div class="command-name">/kick</div>
                                 <div class="command-description">
                                     Remove a member from the server.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="kick"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="kick" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /ban
-                                </div>
-
+                                <div class="command-name">/ban</div>
                                 <div class="command-description">
                                     Permanently ban a member.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="ban"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="ban" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /purge
-                                </div>
-
+                                <div class="command-name">/purge</div>
                                 <div class="command-description">
                                     Remove multiple messages from a channel.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="purge"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="purge" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
                 </div>
-
             </div>
 
+
+            <!-- SERVER MANAGEMENT -->
 
             <div class="section">
 
                 <div class="section-title">
-
-                    <strong>
-                        Server Management
-                    </strong>
-
-                    <span>
-                        SERVER CONTROLS
-                    </span>
-
+                    <strong>Server Management</strong>
+                    <span>SERVER CONTROLS</span>
                 </div>
 
                 <div class="command-list">
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /lock
-                                </div>
-
+                                <div class="command-name">/lock</div>
                                 <div class="command-description">
-                                    Lock a channel and restrict normal communication.
+                                    Lock a channel.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="lock"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="lock" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /unlock
-                                </div>
-
+                                <div class="command-name">/unlock</div>
                                 <div class="command-description">
                                     Restore normal channel communication.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="unlock"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="unlock" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /slowmode
-                                </div>
-
+                                <div class="command-name">/slowmode</div>
                                 <div class="command-description">
-                                    Configure the slowmode delay for a channel.
+                                    Configure channel slowmode.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="slowmode"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="slowmode" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /roleadd
-                                </div>
-
+                                <div class="command-name">/roleadd</div>
                                 <div class="command-description">
-                                    Add a role to a server member.
+                                    Add a role to a member.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="roleadd"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="roleadd" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /nick
-                                </div>
-
+                                <div class="command-name">/nick</div>
                                 <div class="command-description">
-                                    Change a member's server nickname.
+                                    Change a member's nickname.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="nick"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="nick" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
                 </div>
-
             </div>
 
+
+            <!-- COMMUNITY -->
 
             <div class="section">
 
                 <div class="section-title">
-
-                    <strong>
-                        Community
-                    </strong>
-
-                    <span>
-                        COMMUNITY TOOLS
-                    </span>
-
+                    <strong>Community</strong>
+                    <span>COMMUNITY TOOLS</span>
                 </div>
 
                 <div class="command-list">
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /welcome
-                                </div>
-
+                                <div class="command-name">/welcome</div>
                                 <div class="command-description">
                                     Configure automated welcome messages.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="welcome"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="welcome" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /promotion
-                                </div>
-
+                                <div class="command-name">/promotion</div>
                                 <div class="command-description">
-                                    Create and manage server promotion content.
+                                    Manage server promotion content.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="promotion"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="promotion" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
-                                <div class="command-name">
-                                    /review
-                                </div>
-
+                                <div class="command-name">/review</div>
                                 <div class="command-description">
-                                    Manage community reviews and feedback.
+                                    Manage community reviews.
                                 </div>
                             </div>
 
                             <label class="toggle">
-                                <input
-                                    type="checkbox"
-                                    data-command="review"
-                                    checked
-                                >
+                                <input type="checkbox" data-command="review" checked>
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
                 </div>
-
             </div>
 
+
+            <!-- SETTINGS -->
 
             <div class="section">
 
                 <div class="section-title">
-
-                    <strong>
-                        Configuration
-                    </strong>
-
-                    <span>
-                        SERVER SETTINGS
-                    </span>
-
+                    <strong>Configuration</strong>
+                    <span>SERVER SETTINGS</span>
                 </div>
 
                 <div class="settings-grid">
 
                     <div class="setting-card">
-
                         <label for="prefix">
                             Bot Prefix
                         </label>
@@ -1100,15 +853,12 @@
                             id="prefix"
                             type="text"
                             maxlength="5"
-                            placeholder="!"
                             value="!"
                         >
-
                     </div>
 
 
                     <div class="setting-card">
-
                         <label for="logChannel">
                             Log Channel ID
                         </label>
@@ -1118,7 +868,6 @@
                             type="text"
                             placeholder="Channel ID"
                         >
-
                     </div>
 
                 </div>
@@ -1126,32 +875,26 @@
             </div>
 
 
+            <!-- SECURITY -->
+
             <div class="section">
 
                 <div class="section-title">
-
-                    <strong>
-                        Security
-                    </strong>
-
-                    <span>
-                        SERVER PROTECTION
-                    </span>
-
+                    <strong>Security</strong>
+                    <span>SERVER PROTECTION</span>
                 </div>
 
                 <div class="command-list">
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
                                 <div class="command-name">
                                     Raid Protection
                                 </div>
 
                                 <div class="command-description">
-                                    Detect and respond to suspicious server activity.
+                                    Detect suspicious server activity.
                                 </div>
                             </div>
 
@@ -1161,23 +904,22 @@
                                     data-command="raid_protection"
                                     checked
                                 >
+
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
 
                     <div class="command">
                         <div class="command-top">
-
                             <div>
                                 <div class="command-name">
                                     Security Logs
                                 </div>
 
                                 <div class="command-description">
-                                    Record important security and moderation events.
+                                    Record security and moderation events.
                                 </div>
                             </div>
 
@@ -1187,14 +929,13 @@
                                     data-command="security_logs"
                                     checked
                                 >
+
                                 <span class="slider"></span>
                             </label>
-
                         </div>
                     </div>
 
                 </div>
-
             </div>
 
 
@@ -1218,7 +959,7 @@
 
         </section>
 
-    </div>
+    </section>
 
 </main>
 
@@ -1230,427 +971,283 @@
 
 <script>
 
-    let selectedGuild = null;
+/*
+|--------------------------------------------------------------------------
+| DISCORD LOGIN
+|--------------------------------------------------------------------------
+|
+| This sends the user to your Vercel OAuth endpoint.
+|
+*/
+
+function loginWithDiscord() {
+
+    window.location.href = "/api/auth/discord";
+
+}
 
 
-    /*
-     * DISCORD LOGIN
-     *
-     * This points to the Vercel serverless
-     * OAuth endpoint.
-     */
+/*
+|--------------------------------------------------------------------------
+| LOAD SERVERS
+|--------------------------------------------------------------------------
+*/
 
-    function loginWithDiscord() {
+async function loadGuilds() {
 
-        window.location.href =
-            "/api/auth/discord";
+    try {
 
-    }
-
-
-    /*
-     * LOAD DISCORD SERVERS
-     */
-
-    async function loadGuilds() {
-
-        try {
-
-            const response =
-                await fetch(
-                    "/api/auth/guilds",
-                    {
-                        credentials: "include"
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Not authenticated"
-                );
-
+        const response = await fetch(
+            "/api/auth/guilds",
+            {
+                method: "GET",
+                credentials: "include"
             }
+        );
 
 
-            const data =
-                await response.json();
+        if (!response.ok) {
 
+            document.getElementById("loginPanel").style.display = "block";
 
-            document
-                .getElementById("loginPanel")
-                .style.display = "none";
-
-
-            document
-                .getElementById("dashboard")
-                .style.display = "grid";
-
-
-            renderGuilds(
-                data.guilds || []
-            );
-
-
-        } catch (error) {
-
-            console.log(
-                "Discord authentication required."
-            );
-
-        }
-
-    }
-
-
-    /*
-     * RENDER SERVERS
-     */
-
-    function renderGuilds(guilds) {
-
-        const list =
-            document.getElementById(
-                "serverList"
-            );
-
-
-        list.innerHTML = "";
-
-
-        if (!guilds.length) {
-
-            list.innerHTML = `
-                <div style="
-                    color:#55555a;
-                    font-size:8px;
-                    padding:10px;
-                ">
-                    No manageable servers found.
-                </div>
-            `;
+            document.getElementById("dashboard").style.display = "none";
 
             return;
 
         }
 
 
-        guilds.forEach(guild => {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
+        const data = await response.json();
 
 
-            button.className =
-                "server-button";
+        document.getElementById("loginPanel").style.display = "none";
+
+        document.getElementById("dashboard").style.display = "grid";
 
 
-            const icon =
-                document.createElement(
-                    "img"
-                );
+        renderGuilds(data.guilds || []);
 
 
-            icon.src =
-                guild.icon ||
-                "images/oxelon.png";
+    } catch (error) {
+
+        console.error(
+            "Failed to load Discord session:",
+            error
+        );
+
+    }
+
+}
 
 
-            const name =
-                document.createElement(
-                    "span"
-                );
+/*
+|--------------------------------------------------------------------------
+| RENDER SERVERS
+|--------------------------------------------------------------------------
+*/
+
+function renderGuilds(guilds) {
+
+    const list =
+        document.getElementById("serverList");
 
 
-            name.textContent =
-                guild.name;
+    list.innerHTML = "";
 
 
-            button.appendChild(icon);
-            button.appendChild(name);
+    if (!guilds.length) {
 
+        list.innerHTML = `
+            <div style="
+                color:#55555a;
+                font-size:8px;
+                padding:10px;
+            ">
+                No manageable servers found.
+            </div>
+        `;
 
-            button.onclick =
-                () => {
-
-                    document
-                        .querySelectorAll(
-                            ".server-button"
-                        )
-                        .forEach(item =>
-                            item.classList.remove(
-                                "active"
-                            )
-                        );
-
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    selectGuild(guild);
-
-                };
-
-
-            list.appendChild(button);
-
-        });
+        return;
 
     }
 
 
-    /*
-     * SELECT SERVER
-     */
+    guilds.forEach(guild => {
 
-    async function selectGuild(guild) {
-
-        selectedGuild = guild;
+        const button =
+            document.createElement("button");
 
 
-        document
-            .getElementById(
-                "selectedServerName"
-            )
-            .textContent =
-                guild.name;
+        button.className =
+            "server-button";
 
 
-        document
-            .getElementById(
-                "serverLabel"
-            )
-            .textContent =
-                guild.name;
+        const icon =
+            document.createElement("img");
 
 
-        document
-            .getElementById(
-                "selectedServerIcon"
-            )
-            .src =
-                guild.icon ||
-                "images/oxelon.png";
+        icon.src =
+            guild.icon ||
+            "images/oxelon.png";
 
 
-        try {
-
-            const response =
-                await fetch(
-                    `/api/guilds/${guild.id}/settings`,
-                    {
-                        credentials: "include"
-                    }
-                );
+        const name =
+            document.createElement("span");
 
 
-            if (!response.ok) {
-
-                return;
-
-            }
+        name.textContent =
+            guild.name;
 
 
-            const settings =
-                await response.json();
+        button.appendChild(icon);
 
+        button.appendChild(name);
+
+
+        button.onclick = () => {
 
             document
-                .querySelectorAll(
-                    "[data-command]"
-                )
-                .forEach(input => {
+                .querySelectorAll(".server-button")
+                .forEach(item => {
 
-                    const command =
-                        input.dataset.command;
-
-
-                    if (
-                        Object.prototype
-                            .hasOwnProperty
-                            .call(
-                                settings,
-                                command
-                            )
-                    ) {
-
-                        input.checked =
-                            Boolean(
-                                settings[command]
-                            );
-
-                    }
+                    item.classList.remove("active");
 
                 });
 
 
-            if (
-                settings.prefix !== undefined
-            ) {
-
-                document
-                    .getElementById(
-                        "prefix"
-                    )
-                    .value =
-                        settings.prefix;
-
-            }
+            button.classList.add("active");
 
 
-            if (
-                settings.log_channel !== undefined
-            ) {
+            selectGuild(guild);
 
-                document
-                    .getElementById(
-                        "logChannel"
-                    )
-                    .value =
-                        settings.log_channel;
-
-            }
+        };
 
 
-        } catch (error) {
+        list.appendChild(button);
 
-            console.error(
-                "Failed to load server settings:",
-                error
+    });
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SELECT SERVER
+|--------------------------------------------------------------------------
+*/
+
+async function selectGuild(guild) {
+
+    document.getElementById(
+        "serverLabel"
+    ).textContent = guild.name;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/guilds/${guild.id}/settings`,
+                {
+                    credentials: "include"
+                }
             );
 
-        }
 
-    }
-
-
-    /*
-     * SAVE SERVER SETTINGS
-     */
-
-    async function saveSettings() {
-
-        if (!selectedGuild) {
-
-            alert(
-                "Select a server first."
-            );
+        if (!response.ok) {
 
             return;
 
         }
 
 
-        const settings = {};
+        const settings =
+            await response.json();
 
 
         document
-            .querySelectorAll(
-                "[data-command]"
-            )
+            .querySelectorAll("[data-command]")
             .forEach(input => {
 
-                settings[
-                    input.dataset.command
-                ] =
-                    input.checked;
+                const command =
+                    input.dataset.command;
+
+
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        settings,
+                        command
+                    )
+                ) {
+
+                    input.checked =
+                        Boolean(
+                            settings[command]
+                        );
+
+                }
 
             });
 
 
-        settings.prefix =
-            document
-                .getElementById(
-                    "prefix"
-                )
-                .value
-                .trim();
+        if (
+            settings.prefix !== undefined
+        ) {
 
-
-        settings.log_channel =
-            document
-                .getElementById(
-                    "logChannel"
-                )
-                .value
-                .trim();
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/guilds/${selectedGuild.id}/settings`,
-                    {
-                        method: "PUT",
-
-                        credentials: "include",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(
-                                settings
-                            )
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Save failed"
-                );
-
-            }
-
-
-            const status =
-                document
-                    .getElementById(
-                        "saveStatus"
-                    );
-
-
-            status.style.display =
-                "inline";
-
-
-            setTimeout(() => {
-
-                status.style.display =
-                    "none";
-
-            }, 2500);
-
-
-        } catch (error) {
-
-            console.error(error);
-
-
-            alert(
-                "Unable to save the server settings."
-            );
+            document.getElementById(
+                "prefix"
+            ).value =
+                settings.prefix;
 
         }
 
+
+        if (
+            settings.log_channel !== undefined
+        ) {
+
+            document.getElementById(
+                "logChannel"
+            ).value =
+                settings.log_channel;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load server settings:",
+            error
+        );
+
     }
 
+}
 
-    /*
-     * RESTORE SESSION
-     */
 
-    loadGuilds();
+/*
+|--------------------------------------------------------------------------
+| SAVE SETTINGS
+|--------------------------------------------------------------------------
+*/
+
+async function saveSettings() {
+
+    alert(
+        "Select a server before saving settings."
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| START
+|--------------------------------------------------------------------------
+*/
+
+loadGuilds();
 
 </script>
 
